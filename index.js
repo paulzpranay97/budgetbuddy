@@ -14,14 +14,10 @@ const  {auth}= require("./middlewares/auth")
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.set("views", __dirname + "/public");
-app.set("view engine", "ejs");
-app.use(express.static("./public"));
 
 
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "public", "index.html"));
-});
+
+
 
 app.use("/auth",googleRouter);
 app.use("/users",userRouter);
