@@ -8,7 +8,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://budgetbuddyfe.netlify.app/auth/google/callback",
+      callbackURL: "https://bbuddybe.onrender.com/auth/google/callback",
     },
     async function (accessToken, refreshToken, profile, cb) {
       const { name, email, picture } = profile._json;
