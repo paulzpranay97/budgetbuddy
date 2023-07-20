@@ -8,6 +8,57 @@ basePath: /
 schemes:
   - https
   - http
+definitions:
+  User:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+        format: password
+      picture:
+        type: string
+      mobile_number:
+        type: number
+
+  DataModel:
+    type: object
+    properties:
+      _id:
+        type: string
+      user:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      category:
+        type: string
+      amount:
+        type: number
+      comment:
+        type: string
+      date:
+        type: string
+
+  ExpenseByCategory:
+    type: object
+    properties:
+      category:
+        type: string
+      totalExpense:
+        type: number
+
+  IncomeByCategory:
+    type: object
+    properties:
+      category:
+        type: string
+      totalIncome:
+        type: number
 paths:
   /users/signup:
     post:
@@ -578,59 +629,6 @@ paths:
               $ref: '#/definitions/DataModel'
         '401':
           description: Unauthorized
-
-definitions:
-  User:
-    type: object
-    properties:
-      name:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
-        format: password
-      picture:
-        type: string
-      mobile_number:
-        type: number
-
-  DataModel:
-    type: object
-    properties:
-      _id:
-        type: string
-      user:
-        type: string
-      title:
-        type: string
-      type:
-        type: string
-      category:
-        type: string
-      amount:
-        type: number
-      comment:
-        type: string
-      date:
-        type: string
-
-  ExpenseByCategory:
-    type: object
-    properties:
-      category:
-        type: string
-      totalExpense:
-        type: number
-
-  IncomeByCategory:
-    type: object
-    properties:
-      category:
-        type: string
-      totalIncome:
-        type: number
-
 securityDefinitions:
   BearerAuth:
     type: apiKey
