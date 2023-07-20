@@ -1,0 +1,206 @@
+swagger: '2.0'
+info:
+  title: Budgetbuddy.com API
+  description: API for managing user accounts
+  version: 1.0.0
+host: bbuddybe.onrender.com
+basePath: /users
+schemes:
+  - https
+  - http
+paths:
+  /signup:
+    post:
+      tags:
+        - User
+      summary: Creates a new user account
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: User object
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+                format: password
+              picture:
+                type: string
+              mobile_number:
+                type: number
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+        '400':
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+        '409':
+          description: Conflict
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+  /login:
+    post:
+      tags:
+        - User
+      summary: Logs in a user
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: login
+          description: Login credentials
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+                format: password
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+              token:
+                type: string
+              refreshToken:
+                type: string
+        '400':
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+        '401':
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+  /logout:
+    post:
+      tags:
+        - User
+      summary: Logs out a user
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+        '401':
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+  /:
+    get:
+      tags:
+        - User
+      summary: Gets the current user
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+              picture:
+                type: string
+              mobile_number:
+                type: string
+                format: password
+        '401':
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+    /google:
+    get:
+      tags:
+        - Google OAuth
+      summary: Initiate Google OAuth login
+      responses:
+        '302':
+          description: Redirect to Google OAuth login page
+
+  /google/callback:
+    get:
+      tags:
+        - Google OAuth
+      summary: Google OAuth callback
+      parameters:
+        - in: query
+          name: token
+          type: string
+          description: Access token received from Google OAuth
+        - in: query
+          name: rtoken
+          type: string
+          description: Refresh token received from Google OAuth
+      responses:
+        '302':
+          description: Redirect to the frontend application with tokens in URL
+securityDefinitions:
+  GoogleOAuth:
+    type: oauth2
+    authorizationUrl: https://accounts.google.com/o/oauth2/auth
+    tokenUrl: https://accounts.google.com/o/oauth2/token
+    flow: implicit
+    scopes:
+      profile: Access the user's basic profile information.
+      email: Access the user's email address.
+
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    scheme: bearer
+    in: header
