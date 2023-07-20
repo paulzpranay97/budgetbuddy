@@ -1,15 +1,15 @@
 swagger: '2.0'
 info:
-  title: Budgetbuddy.com API
-  description: API for managing user accounts
+  title: Budgetbuddy.com API Docs
+  description: API for managing user accounts and users data
   version: 1.0.0
 host: bbuddybe.onrender.com
-basePath: /users
+basePath: /
 schemes:
   - https
   - http
 paths:
-  /signup:
+  /users/signup:
     post:
       tags:
         - User
@@ -23,19 +23,7 @@ paths:
           name: user
           description: User object
           schema:
-            type: object
-            properties:
-              name:
-                type: string
-              email:
-                type: string
-              password:
-                type: string
-                format: password
-              picture:
-                type: string
-              mobile_number:
-                type: number
+            $ref: '#/definitions/UserModel'
       responses:
         '200':
           description: OK
@@ -58,7 +46,7 @@ paths:
             properties:
               msg:
                 type: string
-  /login:
+  /users/login:
     post:
       tags:
         - User
@@ -105,7 +93,7 @@ paths:
             properties:
               msg:
                 type: string
-  /logout:
+  /users/logout:
     post:
       tags:
         - User
@@ -131,7 +119,7 @@ paths:
             properties:
               msg:
                 type: string
-  /:
+  /users/:
     get:
       tags:
         - User
@@ -154,7 +142,6 @@ paths:
                 type: string
               mobile_number:
                 type: string
-                format: password
         '401':
           description: Unauthorized
           schema:
@@ -162,7 +149,496 @@ paths:
             properties:
               msg:
                 type: string
-    /google:
+  /budget/adddata:
+    post:
+      tags:
+        - Users Data APIs
+      summary: Create new data
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: body
+          name: data
+          description: Data object
+          schema:
+            $ref: '#/definitions/DataModel'
+      responses:
+        '201':
+          description: Created
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+              user:
+                type: string
+              title:
+                type: string
+              type:
+                type: string
+              category:
+                type: string
+              amount:
+                type: number
+              comment:
+                type: string
+              date:
+                type: string
+        '400':
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+  /budget/updata/{id}:
+    put:
+      tags:
+        - Users Data APIs
+      summary: Update data by ID
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: ID of the data to update
+        - in: body
+          name: data
+          description: Data object
+          schema:
+            $ref: '#/definitions/DataModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+              user:
+                type: string
+              title:
+                type: string
+              type:
+                type: string
+              category:
+                type: string
+              amount:
+                type: number
+              comment:
+                type: string
+              date:
+                type: string
+        '400':
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        '404':
+          description: Data not found
+
+  /budget/deldata/{id}:
+    delete:
+      tags:
+        - Users Data APIs
+      summary: Delete data by ID
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: ID of the data to delete
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        '404':
+          description: Data not found
+
+  /budget/viewalldata:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View all data
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+  /budget/monthlydata/{month}:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View data for a specific month
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: month
+          type: integer
+          description: Number representing the month (1-12)
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+  /budget/databycat/{category}:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View data by category
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: category
+          type: string
+          description: Category of the data
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+  /budget/databytitle:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View data by title
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: title
+          type: string
+          description: Title of the data (optional)
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+  /budget/totalincome:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View total income
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              TotalIncome:
+                type: number
+        '401':
+          description: Unauthorized
+
+  /budget/totalexpense:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View total expense
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              TotalExpense:
+                type: number
+        '401':
+          description: Unauthorized
+
+  /budget/totalprofit:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View total profit
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              totalProfit:
+                type: number
+        '401':
+          description: Unauthorized
+
+  /budget/totalex-category:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View total expense by category (ascending)
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ExpenseByCategory'
+        '401':
+          description: Unauthorized
+
+  /budget/totalin-category:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View total income by category (ascending)
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/IncomeByCategory'
+        '401':
+          description: Unauthorized
+
+  /budget/allexpense:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View all expenses
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+  /budget/allexpense-asc:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View all expenses in ascending order of amount
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+  /budget/allexpense-dsc:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View all expenses in descending order of amount
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+  /budget/allincome:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View all incomes
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+  /budget/allincome-asc:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View all incomes in ascending order of amount
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+  /budget/allincome-dsc:
+    get:
+      tags:
+        - Users Data APIs
+      summary: View all incomes in descending order of amount
+      produces:
+        - application/json
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DataModel'
+        '401':
+          description: Unauthorized
+
+definitions:
+  User:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+        format: password
+      picture:
+        type: string
+      mobile_number:
+        type: number
+
+  DataModel:
+    type: object
+    properties:
+      _id:
+        type: string
+      user:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      category:
+        type: string
+      amount:
+        type: number
+      comment:
+        type: string
+      date:
+        type: string
+
+  ExpenseByCategory:
+    type: object
+    properties:
+      category:
+        type: string
+      totalExpense:
+        type: number
+
+  IncomeByCategory:
+    type: object
+    properties:
+      category:
+        type: string
+      totalIncome:
+        type: number
+
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    scheme: bearer
+    in: header
+
+  /auth/google:
     get:
       tags:
         - Google OAuth
@@ -171,7 +647,7 @@ paths:
         '302':
           description: Redirect to Google OAuth login page
 
-  /google/callback:
+  /auth/google/callback:
     get:
       tags:
         - Google OAuth
@@ -188,19 +664,3 @@ paths:
       responses:
         '302':
           description: Redirect to the frontend application with tokens in URL
-securityDefinitions:
-  GoogleOAuth:
-    type: oauth2
-    authorizationUrl: https://accounts.google.com/o/oauth2/auth
-    tokenUrl: https://accounts.google.com/o/oauth2/token
-    flow: implicit
-    scopes:
-      profile: Access the user's basic profile information.
-      email: Access the user's email address.
-
-securityDefinitions:
-  BearerAuth:
-    type: apiKey
-    name: Authorization
-    scheme: bearer
-    in: header
