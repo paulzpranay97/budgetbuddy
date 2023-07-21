@@ -636,29 +636,4 @@ securityDefinitions:
     scheme: bearer
     in: header
 
-  /auth/google:
-    get:
-      tags:
-        - Google OAuth
-      summary: Initiate Google OAuth login
-      responses:
-        '302':
-          description: Redirect to Google OAuth login page
-
-  /auth/google/callback:
-    get:
-      tags:
-        - Google OAuth
-      summary: Google OAuth callback
-      parameters:
-        - in: query
-          name: token
-          type: string
-          description: Access token received from Google OAuth
-        - in: query
-          name: rtoken
-          type: string
-          description: Refresh token received from Google OAuth
-      responses:
-        '302':
-          description: Redirect to the frontend application with tokens in URL
+  
