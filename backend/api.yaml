@@ -630,8 +630,10 @@ paths:
         '401':
           description: Unauthorized
 securityDefinitions:
-  BearerAuth:
+  JWT:
     type: apiKey
     name: Authorization
-    scheme: Bearer
     in: header
+    description: "JWT authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'"
+security:
+  - JWT: []
