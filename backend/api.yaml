@@ -633,7 +633,5 @@ securityDefinitions:
   BearerAuth:
     type: apiKey
     name: Authorization
-    scheme: bearer
+    scheme: Bearer
     in: header
-
-  
